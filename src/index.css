@@ -1,0 +1,231 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans:
+    'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
+    Roboto, sans-serif;
+  --font-display: 'Playfair Display', ui-serif, Georgia, 'Times New Roman', serif;
+
+  --color-brand-50: #fdf8f0;
+  --color-brand-100: #f9ecd8;
+  --color-brand-200: #f2d6ac;
+  --color-brand-300: #e8b878;
+  --color-brand-400: #dd9748;
+  --color-brand-500: #d17d2a;
+  --color-brand-600: #b9631f;
+  --color-brand-700: #994a1d;
+  --color-brand-800: #7c3c1e;
+  --color-brand-900: #66331c;
+
+  --color-ink-50: #f6f6f5;
+  --color-ink-100: #e7e7e5;
+  --color-ink-200: #d1d1cd;
+  --color-ink-300: #b0b0aa;
+  --color-ink-400: #888880;
+  --color-ink-500: #6d6d66;
+  --color-ink-600: #57574f;
+  --color-ink-700: #464640;
+  --color-ink-800: #2b2b27;
+  --color-ink-900: #1c1c19;
+  --color-ink-950: #121210;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--color-ink-950);
+    color: var(--color-ink-100);
+    font-family: var(--font-sans);
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand-400);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background-color: var(--color-brand-500);
+    color: var(--color-ink-950);
+  }
+
+  /* Movement is suppressed when the visitor asks for reduced motion, unless the
+     template owner forces it on with siteConfig.motion = 'full' (mirrored onto
+     <html data-motion>). See src/main.tsx. */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    html:not([data-motion='full']) *,
+    html:not([data-motion='full']) *::before,
+    html:not([data-motion='full']) *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+
+  html[data-motion='reduced'] *,
+  html[data-motion='reduced'] *::before,
+  html[data-motion='reduced'] *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* --- Lenis smooth scroll --- */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+/* --- Cinematic: film grain --- */
+/* The grain texture is deliberately larger than its box; without this it
+   escapes the overlay and widens the document (measured at 320px). */
+.film-grain {
+  overflow: hidden;
+}
+
+.film-grain::after {
+  content: '';
+  position: absolute;
+  inset: -150%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  opacity: 0.13;
+  filter: grayscale(1) contrast(190%) brightness(165%);
+  pointer-events: none;
+  animation: grain 6s steps(8) infinite;
+}
+
+@keyframes grain {
+  0% {
+    transform: translate(0, 0);
+  }
+  12.5% {
+    transform: translate(-3%, -4%);
+  }
+  25% {
+    transform: translate(-8%, 3%);
+  }
+  37.5% {
+    transform: translate(4%, -6%);
+  }
+  50% {
+    transform: translate(-3%, 8%);
+  }
+  62.5% {
+    transform: translate(-8%, -3%);
+  }
+  75% {
+    transform: translate(6%, 4%);
+  }
+  87.5% {
+    transform: translate(-4%, -8%);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+/* --- Cinematic: light sweep on hover --- */
+.sheen {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.sheen::before {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  left: -140%;
+  width: 45%;
+  background: linear-gradient(
+    105deg,
+    transparent,
+    rgba(255, 236, 200, 0.38),
+    transparent
+  );
+  transform: skewX(-18deg);
+  transition: left 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.sheen:hover::before,
+.sheen:focus-within::before {
+  left: 150%;
+}
+
+/* --- Premium: shimmering gradient text --- */
+.shimmer-text {
+  background-image: linear-gradient(
+    100deg,
+    var(--color-brand-200),
+    var(--color-brand-500),
+    var(--color-brand-200)
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 7s linear infinite;
+}
+
+@keyframes shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+/* --- Marquee --- */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+/* --- Ambient glow pulse for highlighted pricing --- */
+@keyframes glow-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(209, 125, 42, 0.28);
+  }
+  50% {
+    box-shadow: 0 0 34px 2px rgba(209, 125, 42, 0.22);
+  }
+}
+
+.glow-pulse {
+  animation: glow-pulse 4.5s ease-in-out infinite;
+}
